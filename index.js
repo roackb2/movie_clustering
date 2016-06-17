@@ -1,4 +1,5 @@
 var factory = require("./lib/factory.js");
+var FeatureSelector =  require('feature-selector')
 
 
 //var posts = factory.readPostsFromFile(".");
@@ -26,7 +27,7 @@ factory.saveSegmentedLocal(segmented).then(function() {
 	console.log("done");
 })*/
 
-factory.clusterPublicSentiment(factory.PatTree, 0, 20, 20).then(function() {
+factory.clusterMovies(100, FeatureSelector.MI, 20, 20).then(function() {
     console.log("done")
     process.exit(0)
 }).catch(function(err) {
