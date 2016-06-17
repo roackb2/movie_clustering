@@ -27,7 +27,7 @@ factory.saveSegmentedLocal(segmented).then(function() {
 	console.log("done");
 })*/
 
-factory.clusterMovies(100, FeatureSelector.MI, 20, 20).then(function() {
+factory.clusterMovies(true, 100, FeatureSelector.MI, 20, 20).then(function() {
     console.log("done")
     process.exit(0)
 }).catch(function(err) {
