@@ -1,0 +1,33 @@
+{
+  "name": "movie_clustering",
+  "version": "1.0.0",
+  "description": "clustering analysis on discussion of movies in PTT, for NTI course Data Mining",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "bluebird": "^2.3.11",
+    "bson": "^0.4.23",
+    "feature-selector": "github:roackb2/feature-selector",
+    "hac": "^1.0.7",
+    "install": "^0.8.1",
+    "jsonfile": "^2.0.0",
+    "mongodb": "^1.4.28",
+    "mysql": "^2.11.1",
+    "nodejieba": "^2.1.0",
+    "npm": "^3.9.6",
+    "pat-tree": "^1.0.8",
+    "stringify": "github:roackb2/stringify"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/roackb2/public_sentiment_clustering.git"
+  },
+  "author": "Jay Liang <roackb2@gmail.com> (https://www.facebook.com/profile.php?id=1391931108)",
+  "license": "ISC"
+}

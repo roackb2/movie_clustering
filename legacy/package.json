@@ -1,0 +1,19 @@
+{
+  "name": "murmur-analytics",
+  "version": "1.0.0",
+  "description": "",
+  "main": "buildKeywords.js",
+  "dependencies": {
+    "bluebird": "^2.3.11",
+    "jsonfile": "^2.0.0",
+    "mongodb": "^1.4.22",
+    "pat-tree": "^0.2.8",
+    "sails-mongo": "^0.10.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jay Liang <roackb2@gmail.com> (https://www.facebook.com/profile.php?id=1391931108)",
+  "license": "ISC"
+}
