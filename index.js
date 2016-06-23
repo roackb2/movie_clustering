@@ -1,64 +1,49 @@
 var factory = require("./lib/factory.js");
-var FeatureSelector =  require('feature-selector')
+var FeatureSelector = require('feature-selector')
+const cluster = require('cluster');
+const numCPUs = require('os').cpus().length;
 
+if (cluster.isMaster) {
+    if (numCPUs < 4) {
+        console.log("not enough CPU core count for parallelism")
+        process.exit(0)
+    }
 
-//var posts = factory.readPostsFromFile(".");
-var tree;
-var SLPs;
-var segmented;
-//console.log("posts count: " + posts.length);
-/*factory.savePostsLocal(posts).then(function() {
-	tree = factory.buildTree(posts);
-	return factory.saveTreeLocal(tree);
-}).then(function() {
-	SLPs = factory.generateSLP(tree);
-	return factory.saveSLPLocal(SLPs);
-}).then(function() {
-	segmented = factory.getSegmentedDocs(tree, posts, false);
-	return factory.saveSegmentedLocal(segmented);
-}).then(function() {
-	console.log("done");
-})*/
+    tasks = [{
+        clusterMethod: 'GA',
+        featureMethod: 'MI',
+    }, {
+        clusterMethod: 'GA',
+        featureMethod: 'LLR',
+    }, {
+        clusterMethod: 'CompleteLink',
+        featureMethod: 'MI',
+    }, {
+        clusterMethod: 'CompleteLink',
+        featureMethod: 'LLR',
+    }, ]
 
-/*tree = factory.buildTree(posts);
-factory.generateSLP(tree);
-segmented = factory.getSegmentedDocs(tree, posts, true);
-factory.saveSegmentedLocal(segmented).then(function() {
-	console.log("done");
-})*/
+    var numDone = 0;
 
-factory.clusterMovies(true, 100, FeatureSelector.MI, 20, 20).then(function() {
-    console.log("done")
-    process.exit(0)
-}).catch(function(err) {
-    console.log(err)
-    process.exit(0)
-})
+    function messageHandler(msg) {
+        console.log(msg)
+        numDone += 1;
+        if(numDone == 4) {
+            process.exit(0)
+        }
+    }
 
-
-// factory.getClustersAndSaveLocal(7000, 12, 100, true).then(function() {
-//     console.log("done");
-// })
-
-
-/*
-factory.saveLocalToRemote().then(function() {
-	console.log("done");
-})*/
-
-
-/*//console.log(SLPs);
-factory.saveTreeLocal(tree).then(function() {
-	console.log("done");
-})
-//tree.printTreeContent();
-factory.saveSLPLocal(SLPs).then(function() {
-	console.log("done");
-})
-
-var segmented = factory.getSegmentedDocs(tree, posts, SLPs);
-//console.log(segmented);
-
-factory.saveSegmentedLocal(segmented).then(function() {
-	console.log("done");
-})*/
+    for (var i = 0; i < 4; i++) {
+        var worker = cluster.fork();
+        worker.send(tasks[i]);
+        worker.on('message', messageHandler)
+    }
+} else if (cluster.isWorker) {
+    process.on('message', (msg) => {
+        factory.clusterMovies(msg.clusterMethod, true, 100, msg.featureMethod, 20, 20).then(() => {
+            process.send("done clustering with " + msg.clusterMethod + ", " + msg.featureMethod)
+        }).catch((err) => {
+            process.send(err)
+        })
+    });
+}
